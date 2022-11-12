@@ -12,8 +12,10 @@ if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
 }
+
 app.UseStaticFiles();
 app.UseRouting();
+
 app.UseEndpoints(endpoints => {
   endpoints.MapDefaultControllerRoute();
   endpoints.MapRazorPages();
