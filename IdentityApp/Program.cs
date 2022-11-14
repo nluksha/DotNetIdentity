@@ -1,22 +1,34 @@
 using Microsoft.EntityFrameworkCore;
 using IdentityApp.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 // Configure services
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("AppDataConnection");
+var identityConnectionString = builder.Configuration.GetConnectionString("IdentityConnection");
 
-builder.Services.AddHttpsRedirection(opts => {
+builder.Services.AddHttpsRedirection(opts =>
+{
   opts.HttpsPort = 44350;
 });
+
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddDbContext<ProductDbContext>(options => options.UseSqlServer(connectionString));
+builder.Services.AddDbContext<IdentityDbContext>(options =>
+  options.UseSqlServer(
+    identityConnectionString,
+    opts => opts.MigrationsAssembly("IdentityApp")
+  )
+);
+builder.Services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<IdentityDbContext>();
 
-// Configure
+// Configure 
 var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
-    app.UseDeveloperExceptionPage();
+  app.UseDeveloperExceptionPage();
 }
 
 app.UseHttpsRedirection();
@@ -26,7 +38,8 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseEndpoints(endpoints => {
+app.UseEndpoints(endpoints =>
+{
   endpoints.MapDefaultControllerRoute();
   endpoints.MapRazorPages();
 });
