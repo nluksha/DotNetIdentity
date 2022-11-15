@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using IdentityApp.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using IdentityApp.Services;
 
 // Configure services
 var builder = WebApplication.CreateBuilder(args);
@@ -22,6 +24,8 @@ builder.Services.AddDbContext<IdentityDbContext>(options =>
     opts => opts.MigrationsAssembly("IdentityApp")
   )
 );
+builder.Services.AddScoped<IEmailSender, ConsoleEmailSender>();
+
 builder.Services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<IdentityDbContext>();
 
 // Configure 
