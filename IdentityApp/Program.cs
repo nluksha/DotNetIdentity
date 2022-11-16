@@ -33,8 +33,15 @@ builder.Services.AddDefaultIdentity<IdentityUser>(opts =>
   opts.Password.RequireLowercase = false;
   opts.Password.RequireUppercase = false;
   opts.Password.RequireNonAlphanumeric = false;
-  // opts.SignIn.RequireConfirmedAccount = true;
+  opts.SignIn.RequireConfirmedAccount = true;
 }).AddEntityFrameworkStores<IdentityDbContext>();
+
+builder.Services.AddAuthentication()
+  .AddFacebook(opts =>
+  {
+    opts.AppId = builder.Configuration["Facebook:AppId"];
+    opts.AppSecret = builder.Configuration["Facebook:AppSecret"];
+  });
 
 // Configure 
 var app = builder.Build();
