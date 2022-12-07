@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace IdentityApp.Pages.Identity.Admin
 {
@@ -21,8 +22,20 @@ namespace IdentityApp.Pages.Identity.Admin
       UserManager = userMgr;
     }
 
+    public void OnGet()
+    {
+      UsersCount = UserManager.Users.Count();
+    }
+
     public async Task<IActionResult> OnPostAsync()
     {
+      foreach (var existingUser in UserManager.Users.ToList())
+      {
+        var result = await UserManager.DeleteAsync(existingUser);
+
+        result.Process(ModelState);
+      }
+
       foreach (string email in emails)
       {
         var userObject = new IdentityUser
