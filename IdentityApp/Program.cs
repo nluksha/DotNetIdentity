@@ -26,7 +26,7 @@ builder.Services.AddDbContext<IdentityDbContext>(options =>
 );
 builder.Services.AddScoped<IEmailSender, ConsoleEmailSender>();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(opts =>
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(opts =>
 {
   opts.Password.RequiredLength = 8;
   opts.Password.RequireDigit = false;
