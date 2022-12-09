@@ -48,6 +48,13 @@ builder.Services.AddAuthentication()
     opts.ClientSecret = builder.Configuration["Google:ClientSecret"];
   });
 
+builder.Services.ConfigureApplicationCookie(opts =>
+{
+  opts.LoginPath = "/Identity/SignIn";
+  opts.LogoutPath = "/Identity/SignOut";
+  opts.AccessDeniedPath = "/Identity/Forbidden";
+});
+
 // Configure 
 var app = builder.Build();
 if (app.Environment.IsDevelopment())
