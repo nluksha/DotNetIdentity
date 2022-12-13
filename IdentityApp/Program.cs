@@ -34,7 +34,11 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(opts =>
   opts.Password.RequireUppercase = false;
   opts.Password.RequireNonAlphanumeric = false;
   opts.SignIn.RequireConfirmedAccount = true;
-}).AddEntityFrameworkStores<IdentityDbContext>();
+}).AddEntityFrameworkStores<IdentityDbContext>()
+.AddDefaultTokenProviders();
+
+builder.Services.AddScoped<TokenUrlEncoderService>();
+builder.Services.AddScoped<IdentityEmailService>();
 
 builder.Services.AddAuthentication()
   .AddFacebook(opts =>
