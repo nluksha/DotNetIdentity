@@ -3,9 +3,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
+using Microsoft.AspNetCore.Authorization;
+
 
 namespace IdentityApp.Pages.Identity
 {
+  [AllowAnonymous]
   public class SignInModel : UserPageModel
   {
     public SignInModel(SignInManager<IdentityUser> signMgr) => SignInManager = signMgr;

@@ -3,9 +3,12 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+
 
 namespace IdentityApp.Pages.Identity
 {
+  [AllowAnonymous]
   public class UserPasswordRecoveryConfirmModel : UserPageModel
   {
     public UserManager<IdentityUser> UserManager { get; set; }
