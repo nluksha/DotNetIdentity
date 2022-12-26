@@ -37,5 +37,13 @@ namespace IdentityApp.Services
 
       await EmailSender.SendEmailAsync(user.Email, "Set Your Password", $"Please set your password by <a href={url}>clicking here</a>.");
     }
+
+    public async Task SendAccountConfirmEmail(IdentityUser user, string confirmationPage)
+    {
+      string token = await UserManager.GenerateEmailConfirmationTokenAsync(user);
+      string url = GetUrl(user.Email, token, confirmationPage);
+
+      await EmailSender.SendEmailAsync(user.Email, "Complete Your Account Setup", $"Please set up your account by <a href={url}>clicking here</a>.");
+    }
   }
 }
