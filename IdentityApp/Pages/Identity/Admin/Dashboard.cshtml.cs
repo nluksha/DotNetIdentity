@@ -24,8 +24,16 @@ namespace IdentityApp.Pages.Identity.Admin
 
     public void OnGet()
     {
-      UsersCount = UserManager.Users.Count();
-      UsersUnconfirmed = UserManager.Users.Where( u => !u.EmailConfirmed).Count();
+      UsersCount = UserManager.Users
+      .Count();
+
+      UsersUnconfirmed = UserManager.Users
+      .Where(u => !u.EmailConfirmed)
+      .Count();
+
+      UsersLockedout = UserManager.Users
+      .Where(u => u.LockoutEnabled && u.LockoutEnd > System.DateTimeOffset.Now)
+      .Count();
     }
 
     public async Task<IActionResult> OnPostAsync()
@@ -49,9 +57,10 @@ namespace IdentityApp.Pages.Identity.Admin
         IdentityResult result = await UserManager.CreateAsync(userObject);
 
 
-        if (result.Process(ModelState)) {
+        if (result.Process(ModelState))
+        {
           result = await UserManager.AddPasswordAsync(userObject, "mysecret");
-          
+
           result.Process(ModelState);
         }
       }
