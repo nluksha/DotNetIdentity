@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using System.Linq;
+using Microsoft.Extensions.Configuration;
 
 namespace IdentityApp.Pages.Identity.Admin
 {
@@ -15,11 +16,14 @@ namespace IdentityApp.Pages.Identity.Admin
     public int UsersLockedout { get; set; } = 0;
     public int UsersTwoFactor { get; set; } = 0;
 
+    public string DashboardRole { get; set; } = string.Empty;
+
     public UserManager<IdentityUser> UserManager { get; set; }
 
-    public DashboardModel(UserManager<IdentityUser> userMgr)
+    public DashboardModel(UserManager<IdentityUser> userMgr, IConfiguration config)
     {
       UserManager = userMgr;
+      DashboardRole = config["Dashboard:Role"] ?? "Dashboard";
     }
 
     public void OnGet()
@@ -40,9 +44,12 @@ namespace IdentityApp.Pages.Identity.Admin
     {
       foreach (var existingUser in UserManager.Users.ToList())
       {
-        var result = await UserManager.DeleteAsync(existingUser);
+        if (emails.Contains(existingUser.Email) || !await UserManager.IsInRoleAsync(existingUser, DashboardRole))
+        {
+          var result = await UserManager.DeleteAsync(existingUser);
 
-        result.Process(ModelState);
+          result.Process(ModelState);
+        }
       }
 
       foreach (string email in emails)

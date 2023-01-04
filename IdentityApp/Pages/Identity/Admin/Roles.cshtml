@@ -79,7 +79,7 @@
               <form method="post" asp-page-handler="delete">
                 <input type="hidden" asp-for="Id" />
                 <input type="hidden" name="role" value="@role" />
-                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                <button type="submit" disabled="@(role == Model.DashboardRole)" class="btn btn-sm btn-danger">Delete</button>
               </form>
             </td>
           </tr>

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using IdentityApp.Services;
+using IdentityApp;
 
 // Configure services
 var builder = WebApplication.CreateBuilder(args);
@@ -82,5 +83,7 @@ app.UseEndpoints(endpoints =>
   endpoints.MapDefaultControllerRoute();
   endpoints.MapRazorPages();
 });
+
+app.SeedUserStoreForDashboard();
 
 app.Run();

@@ -1,7 +1,20 @@
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+
+@{
+  string dashboardRole = Configuration["Dashboard:Role"] ?? "Dashboard";
+}
+
 <nav class="nav">
   @if (User.Identity.IsAuthenticated)
   {
-    <a asp-page="/Identity/Index" class="nav-link bg-secondary text-white">@User.Identity.Name</a>
+    @if (User.IsInRole(dashboardRole))
+    { 
+      <a asp-page="/Identity/Admin/Dashboard" class="nav-link bg-secondary text-white">@User.Identity.Name</a>
+    }
+    else
+    { 
+      <a asp-page="/Identity/Index" class="nav-link bg-secondary text-white">@User.Identity.Name</a>
+    }
     <a asp-page="/Identity/SignOut" class="nav-link bg-secondary text-white">Sign Out</a>
   }
   else
