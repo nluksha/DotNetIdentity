@@ -38,6 +38,10 @@ namespace IdentityApp.Pages.Identity.Admin
       UsersLockedout = UserManager.Users
       .Where(u => u.LockoutEnabled && u.LockoutEnd > System.DateTimeOffset.Now)
       .Count();
+
+      UsersTwoFactor = UserManager.Users
+      .Where(u => u.TwoFactorEnabled)
+      .Count();
     }
 
     public async Task<IActionResult> OnPostAsync()
