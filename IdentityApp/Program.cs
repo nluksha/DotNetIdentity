@@ -38,7 +38,8 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(opts =>
 }).AddEntityFrameworkStores<IdentityDbContext>()
 .AddDefaultTokenProviders();
 
-builder.Services.Configure<SecurityStampValidatorOptions>(opts => {
+builder.Services.Configure<SecurityStampValidatorOptions>(opts =>
+{
   opts.ValidationInterval = System.TimeSpan.FromMinutes(1);
 });
 
