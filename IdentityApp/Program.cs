@@ -63,6 +63,7 @@ builder.Services.ConfigureApplicationCookie(opts =>
   opts.LoginPath = "/Identity/SignIn";
   opts.LogoutPath = "/Identity/SignOut";
   opts.AccessDeniedPath = "/Identity/Forbidden";
+  opts.Events.DisableRedirectionForApiClients();
 });
 
 // Configure 
