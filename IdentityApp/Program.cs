@@ -66,6 +66,17 @@ builder.Services.ConfigureApplicationCookie(opts =>
   opts.Events.DisableRedirectionForApiClients();
 });
 
+builder.Services.AddCors(opts =>
+{
+  opts.AddDefaultPolicy(builder =>
+  {
+    builder.WithOrigins("http://localhost:5100")
+    .AllowAnyHeader()
+    .AllowAnyMethod()
+    .AllowCredentials();
+  });
+});
+
 // Configure 
 var app = builder.Build();
 if (app.Environment.IsDevelopment())
@@ -76,6 +87,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+app.UseCors();
 
 app.UseAuthentication();
 app.UseAuthorization();
