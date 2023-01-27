@@ -3,6 +3,12 @@ using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
+using Microsoft.Extensions.Configuration;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.Tokens;
+using System.Linq;
+using System;
+using System.Text;
 
 namespace IdentityApp.Controllers
 {
@@ -11,34 +17,54 @@ namespace IdentityApp.Controllers
   public class ApiAuthController : ControllerBase
   {
     private SignInManager<IdentityUser> SignInManager;
+    private UserManager<IdentityUser> UserManager;
+    private IConfiguration Configuration;
 
-    public ApiAuthController(SignInManager<IdentityUser> signMgr)
+    public ApiAuthController(SignInManager<IdentityUser> signMgr, UserManager<IdentityUser> userManager, IConfiguration configuration)
     {
       SignInManager = signMgr;
+      UserManager = userManager;
+      Configuration = configuration;
     }
 
     [HttpPost("signin")]
     public async Task<object> ApiSignIn([FromBody] SignInCredentials creds)
     {
-      SignInResult result = await SignInManager.PasswordSignInAsync(creds.Email, creds.Password, true, true);
+      IdentityUser user = await UserManager.FindByEmailAsync(creds.Email);
+      SignInResult result = await SignInManager.CheckPasswordSignInAsync(user, creds.Password, true);
 
-      return new { success = result.Succeeded };
+      if (result.Succeeded)
+      {
+        SecurityTokenDescriptor descriptor = new SecurityTokenDescriptor
+        {
+          Subject = (await SignInManager.CreateUserPrincipalAsync(user)).Identities.First(),
+          Expires = DateTime.Now.AddMinutes(int.Parse(Configuration["BearerTokens:ExpiryMins"])),
+          SigningCredentials = new SigningCredentials(
+            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["BearerTokens:Key"])),
+            SecurityAlgorithms.HmacSha256Signature
+          )
+        };
+        JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
+        SecurityToken secToken = new JwtSecurityTokenHandler().CreateToken(descriptor);
+
+        return new { success = true, token = handler.WriteToken(secToken) };
+      }
+
+      return new { success = false };
     }
 
-    [HttpPost("signout")]
-    public async Task<IActionResult> ApiSignOut()
-    {
-      await SignInManager.SignOutAsync();
-      
-      return Ok();
-    }
+    // [HttpPost("signout")] 
+    //public async Task<IActionResult> ApiSignOut() { 
+    //    await SignInManager.SignOutAsync(); 
+    //    return Ok(); 
+    //}
   }
 
   public class SignInCredentials
   {
     [Required]
     public string Email { get; set; }
-    
+
     [Required]
     public string Password { get; set; }
   }

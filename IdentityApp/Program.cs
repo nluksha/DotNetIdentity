@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using IdentityApp.Services;
 using IdentityApp;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 // Configure services
 var builder = WebApplication.CreateBuilder(args);
@@ -56,6 +59,12 @@ builder.Services.AddAuthentication()
   {
     opts.ClientId = builder.Configuration["Google:ClientId"];
     opts.ClientSecret = builder.Configuration["Google:ClientSecret"];
+  })
+  .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, opts =>
+  {
+    opts.TokenValidationParameters.ValidateAudience = false;
+    opts.TokenValidationParameters.ValidateIssuer = false;
+    opts.TokenValidationParameters.IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["BearerTokens:Key"]));
   });
 
 builder.Services.ConfigureApplicationCookie(opts =>
