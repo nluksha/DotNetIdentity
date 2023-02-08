@@ -1,4 +1,6 @@
 
+using ExampleApp;
+
 // Configure services
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +20,9 @@ app.UseRouting();
 app.UseEndpoints(endpoints =>
 {
   endpoints.MapGet("/", () => "Hello World!");
+  endpoints.MapGet("/secret", SecretEndpoint.Endpoint)
+    .WithDisplayName("secret");
+
   endpoints.MapRazorPages();
   endpoints.MapDefaultControllerRoute();
 });
