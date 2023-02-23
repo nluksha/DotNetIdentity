@@ -1,5 +1,6 @@
 
 using ExampleApp;
+using ExampleApp.Custom;
 
 // Configure services
 var builder = WebApplication.CreateBuilder(args);
@@ -15,7 +16,12 @@ if (app.Environment.IsDevelopment())
   app.UseDeveloperExceptionPage();
 }
 app.UseStaticFiles();
+
+
+app.UseMiddleware<CustomAuthentication>();
+app.UseMiddleware<RoleMemberships>();
 app.UseRouting();
+app.UseMiddleware<ClaimsReporter>();
 
 app.UseEndpoints(endpoints =>
 {
