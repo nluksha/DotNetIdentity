@@ -21,7 +21,9 @@ app.UseStaticFiles();
 app.UseMiddleware<CustomAuthentication>();
 app.UseMiddleware<RoleMemberships>();
 app.UseRouting();
+
 app.UseMiddleware<ClaimsReporter>();
+app.UseMiddleware<CustomAuthorization>();
 
 app.UseEndpoints(endpoints =>
 {
