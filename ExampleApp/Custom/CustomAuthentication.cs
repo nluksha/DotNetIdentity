@@ -12,7 +12,7 @@ namespace ExampleApp.Custom {
     }
 
     public async Task Invoke(HttpContext context) {
-      string user = context.Request.Query["user"];
+      string user = context.Request.Cookies["authUser"];
 
       if (user != null) {
         var claim = new Claim(ClaimTypes.Name, user);

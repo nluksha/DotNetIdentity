@@ -30,6 +30,8 @@ app.UseEndpoints(endpoints =>
   endpoints.MapGet("/", () => "Hello World!");
   endpoints.MapGet("/secret", SecretEndpoint.Endpoint)
     .WithDisplayName("secret");
+  endpoints.MapGet("/signin", CustomSignInAndSignOut.SignIn);
+  endpoints.MapGet("/signout", CustomSignInAndSignOut.SignOut);
 
   endpoints.MapRazorPages();
   endpoints.MapDefaultControllerRoute();
