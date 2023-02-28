@@ -7,6 +7,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+builder.Services.AddAuthentication(opts => {
+  opts.AddScheme<AuthHandler>("qsv", "QueryStringValue");
+  opts.DefaultScheme = "qsv";
+});
+builder.Services.AddAuthorization();
 
 // Configure 
 var app = builder.Build();
@@ -18,12 +23,14 @@ if (app.Environment.IsDevelopment())
 app.UseStaticFiles();
 
 
-app.UseMiddleware<CustomAuthentication>();
+//app.UseMiddleware<CustomAuthentication>();
+app.UseAuthentication();
 app.UseMiddleware<RoleMemberships>();
 app.UseRouting();
 
 app.UseMiddleware<ClaimsReporter>();
-app.UseMiddleware<CustomAuthorization>();
+//app.UseMiddleware<CustomAuthorization>();
+app.UseAuthorization();
 
 app.UseEndpoints(endpoints =>
 {
