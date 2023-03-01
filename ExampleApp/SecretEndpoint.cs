@@ -4,12 +4,12 @@ using System.Threading.Tasks;
 
 namespace ExampleApp
 {
-  public class SecretEndpoint
-  {
-    [Authorize(Roles = "Administrator")]
-    public static async Task Endpoint(HttpContext context)
+    public class SecretEndpoint
     {
-      await context.Response.WriteAsync("This is the secret message");
+        [Authorize(Roles = "Administrator")]
+        public static async Task Endpoint(HttpContext context)
+        {
+            await context.Response.WriteAsync("This is the secret message");
+        }
     }
-  }
 }
