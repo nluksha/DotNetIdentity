@@ -7,6 +7,8 @@ namespace ExampleApp
 {
     public static class UsersAndClaims
     {
+        public static string[] Schemes = new string[] { "TestScheme" };
+
         public static Dictionary<string, IEnumerable<string>> UserData = new Dictionary<
             string,
             IEnumerable<string>
@@ -25,5 +27,20 @@ namespace ExampleApp
                 kvp => kvp.Value.Select(role => new Claim(ClaimTypes.Role, role)),
                 StringComparer.InvariantCultureIgnoreCase
             );
+
+        public static IEnumerable<ClaimsPrincipal> GetUsers()
+        {
+            foreach (string scheme in Schemes)
+            {
+                foreach (var kvp in Claims)
+                {
+                    ClaimsIdentity ident = new ClaimsIdentity(scheme);
+                    ident.AddClaim(new Claim(ClaimTypes.Name, kvp.Key));
+                    ident.AddClaims(kvp.Value);
+
+                    yield return new ClaimsPrincipal(ident);
+                }
+            }
+        }
     }
 }

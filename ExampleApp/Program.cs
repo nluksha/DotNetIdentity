@@ -5,8 +5,6 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 // Configure services
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllersWithViews();
-builder.Services.AddRazorPages();
 builder.Services
     .AddAuthentication(opts =>
     {
@@ -19,6 +17,7 @@ builder.Services
     });
 builder.Services.AddAuthorization();
 builder.Services.AddRazorPages();
+builder.Services.AddControllersWithViews();
 
 // Configure
 var app = builder.Build();
@@ -29,23 +28,22 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseStaticFiles();
-
-//app.UseMiddleware<CustomAuthentication>();
 app.UseAuthentication();
-app.UseMiddleware<RoleMemberships>();
+
+// app.UseMiddleware<RoleMemberships>();
 app.UseRouting();
 
-app.UseMiddleware<ClaimsReporter>();
-
-//app.UseMiddleware<CustomAuthorization>();
-app.UseAuthorization();
+// app.UseMiddleware<ClaimsReporter>();
+// app.UseMiddleware<CustomAuthorization>();
+// app.UseAuthorization();
+app.UseMiddleware<AuthorizationReporter>();
 
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapGet("/", () => "Hello World!");
-    endpoints.MapGet("/secret", SecretEndpoint.Endpoint).WithDisplayName("secret");
-    //endpoints.MapGet("/signin", CustomSignInAndSignOut.SignIn);
-    //endpoints.MapGet("/signout", CustomSignInAndSignOut.SignOut);
+    // endpoints.MapGet("/secret", SecretEndpoint.Endpoint).WithDisplayName("secret");
+    // endpoints.MapGet("/signin", CustomSignInAndSignOut.SignIn);
+    // endpoints.MapGet("/signout", CustomSignInAndSignOut.SignOut);
 
     endpoints.MapRazorPages();
     endpoints.MapDefaultControllerRoute();
