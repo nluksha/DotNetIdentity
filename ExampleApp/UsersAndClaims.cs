@@ -7,7 +7,7 @@ namespace ExampleApp
 {
     public static class UsersAndClaims
     {
-        public static string[] Schemes = new string[] { "TestScheme" };
+        public static string[] Schemes = new string[] { "TestScheme", "OtherScheme" };
 
         public static Dictionary<string, IEnumerable<string>> UserData = new Dictionary<
             string,

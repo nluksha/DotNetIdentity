@@ -1,9 +1,12 @@
 using ExampleApp;
 using ExampleApp.Custom;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 
 // Configure services
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddTransient<IAuthorizationHandler, CustomRequirementHandler>();
 
 builder.Services
     .AddAuthentication(opts =>
@@ -15,7 +18,10 @@ builder.Services
         opts.LoginPath = "/signin";
         opts.AccessDeniedPath = "/signin/403";
     });
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(opts =>
+{
+    AuthorizationPolicies.AddPolicies(opts);
+});
 builder.Services.AddRazorPages();
 builder.Services.AddControllersWithViews();
 
