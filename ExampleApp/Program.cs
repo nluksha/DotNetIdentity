@@ -22,8 +22,17 @@ builder.Services.AddAuthorization(opts =>
 {
     AuthorizationPolicies.AddPolicies(opts);
 });
-builder.Services.AddRazorPages();
-builder.Services.AddControllersWithViews();
+builder.Services.AddRazorPages(opts =>
+{
+    opts.Conventions.AuthorizePage("/Secret", "NotAdmins");
+});
+builder.Services.AddControllersWithViews(opts =>
+{
+    opts.Conventions.Add(new AuthorizationPolicyConvention("Home", policy: "NotAdmins"));
+    opts.Conventions.Add(
+        new AuthorizationPolicyConvention("Home", action: "Protected", policy: "UsersExceptBob")
+    );
+});
 
 // Configure
 var app = builder.Build();

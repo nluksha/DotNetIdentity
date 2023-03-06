@@ -18,6 +18,37 @@ namespace ExampleApp.Custom
                 },
                 new string[] { "TestScheme" }
             );
+
+            /*
+                        opts.DefaultPolicy = new AuthorizationPolicy(
+                            new IAuthorizationRequirement[]
+                            {
+                                new RolesAuthorizationRequirement(new string[] { "Administrator" })
+                            },
+                            Enumerable.Empty<string>()
+                        );
+                        */
+
+            opts.AddPolicy(
+                "UsersExceptBob",
+                builder =>
+                    builder
+                        .RequireRole("User")
+                        .AddRequirements(
+                            new AssertionRequirement(
+                                context => !string.Equals(context.User.Identity.Name, "Bob")
+                            )
+                        )
+                        .AddAuthenticationSchemes("OtherScheme")
+            );
+
+            opts.AddPolicy(
+                "NotAdmins",
+                builder =>
+                    builder.AddRequirements(
+                        new AssertionRequirement(context => !context.User.IsInRole("Administrator"))
+                    )
+            );
         }
     }
 }
