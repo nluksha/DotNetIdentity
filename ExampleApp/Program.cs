@@ -22,17 +22,8 @@ builder.Services.AddAuthorization(opts =>
 {
     AuthorizationPolicies.AddPolicies(opts);
 });
-builder.Services.AddRazorPages(opts =>
-{
-    opts.Conventions.AuthorizePage("/Secret", "NotAdmins");
-});
-builder.Services.AddControllersWithViews(opts =>
-{
-    opts.Conventions.Add(new AuthorizationPolicyConvention("Home", policy: "NotAdmins"));
-    opts.Conventions.Add(
-        new AuthorizationPolicyConvention("Home", action: "Protected", policy: "UsersExceptBob")
-    );
-});
+builder.Services.AddRazorPages();
+builder.Services.AddControllersWithViews();
 
 // Configure
 var app = builder.Build();
@@ -51,17 +42,20 @@ app.UseRouting();
 // app.UseMiddleware<ClaimsReporter>();
 // app.UseMiddleware<CustomAuthorization>();
 // app.UseAuthorization();
-app.UseMiddleware<AuthorizationReporter>();
+// app.UseMiddleware<AuthorizationReporter>();
+app.UseMiddleware<RoleMemberships>();
+app.UseAuthorization();
 
 app.UseEndpoints(endpoints =>
 {
-    endpoints.MapGet("/", () => "Hello World!");
+    //endpoints.MapGet("/", () => "Hello World!");
     // endpoints.MapGet("/secret", SecretEndpoint.Endpoint).WithDisplayName("secret");
     // endpoints.MapGet("/signin", CustomSignInAndSignOut.SignIn);
     // endpoints.MapGet("/signout", CustomSignInAndSignOut.SignOut);
 
     endpoints.MapRazorPages();
     endpoints.MapDefaultControllerRoute();
+    endpoints.MapFallbackToPage("/Secret");
 });
 
 app.Run();

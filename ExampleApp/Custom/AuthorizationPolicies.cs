@@ -8,6 +8,7 @@ namespace ExampleApp.Custom
     {
         public static void AddPolicies(AuthorizationOptions opts)
         {
+            /*
             opts.FallbackPolicy = new AuthorizationPolicy(
                 new IAuthorizationRequirement[]
                 {
@@ -18,6 +19,7 @@ namespace ExampleApp.Custom
                 },
                 new string[] { "TestScheme" }
             );
+            */
 
             /*
                         opts.DefaultPolicy = new AuthorizationPolicy(
@@ -39,7 +41,7 @@ namespace ExampleApp.Custom
                                 context => !string.Equals(context.User.Identity.Name, "Bob")
                             )
                         )
-                        .AddAuthenticationSchemes("OtherScheme")
+            // .AddAuthenticationSchemes("OtherScheme")
             );
 
             opts.AddPolicy(

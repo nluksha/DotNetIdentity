@@ -8,7 +8,7 @@ namespace ExampleApp.Controllers
     {
         public IActionResult Test() => View();
 
-        [Authorize(Roles = "User", AuthenticationSchemes = "OtherScheme")]
+        //[Authorize(Roles = "User", AuthenticationSchemes = "OtherScheme")]
         public IActionResult Protected() => View("Test", "Protected Action");
 
         [AllowAnonymous]
